@@ -9,6 +9,7 @@ public class Move : MonoBehaviour
     public int StartHP;
     public static int HP = 70;
     [SerializeField] private int extraJumps = 1;
+    private float fallTimer = 0.2f;
 
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
@@ -33,46 +34,49 @@ public class Move : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")))
+        {
+            extraJump = extraJumps;
+            isGrounded = true;
+            fallTimer = 0.25f;
+        }
+        else
+        {
+            isGrounded = false;
+            fallTimer -= Time.deltaTime;
+        }
         if (rb.velocity.y > 0)
             ani.Play("SitAni");
-        else if (rb.velocity.y < 0)
+        else if (rb.velocity.y < 0 && fallTimer < 0)
             ani.Play("FalAni");
         if (Input.GetKey(KeyCode.D))
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
-            if (isGrounded)
+            if (isGrounded && rb.velocity.y == 0)
                 ani.Play("RunAni");
             sprite.flipX = false;
         }
         else if (Input.GetKey(KeyCode.A))
         {
             rb.velocity = new Vector2(-speed, rb.velocity.y);
-            if (isGrounded)
+            if (isGrounded && rb.velocity.y == 0)
                 ani.Play("RunAni");
             sprite.flipX = true;
         }
         else
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
-            if (isGrounded)
+            if (isGrounded && rb.velocity.y == 0)
                 ani.Play("StayAni");
         }
     }
 
     private void Update()
     {
-        if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")))
-        {
-            extraJump = extraJumps;
-            isGrounded = true;
-        }
-        else
-            isGrounded = false;
-        if (isGrounded)
-            extraJump = extraJumps;
         if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && extraJump > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            ani.Play("SitAni");
             extraJump--;
         }
         else if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && extraJump == 0 && isGrounded == true)
