@@ -32,7 +32,7 @@ public class RoomPool : MonoBehaviour
     private void Start()
     {
         int rand;
-        count = Random.Range(3, Random.Range(4,8));
+        count = Random.Range(3, (Random.Range(4, 9) + 1));
         int[] mas = new int[count];
         int ran;
         for (int i = 0; i < count; i++) 
@@ -46,7 +46,7 @@ public class RoomPool : MonoBehaviour
             mas[i % count] = mas[ran];
             mas[ran] = temp;
         }
-        rand = Random.Range(0, 2);
+        rand = Random.Range(0, 3);
         for (int i = 0; i <= rand; i++)
         {
             if (i != rand)
@@ -64,7 +64,7 @@ public class RoomPool : MonoBehaviour
     {
         int randomRoom;
         side.Add(mas);
-        randomRoom = Random.Range(1, 4);
+        randomRoom = Random.Range(1, 5);
         if (randomRoom == 1 && wea == false)
         {
             type.Add(1);

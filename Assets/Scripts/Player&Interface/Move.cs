@@ -17,11 +17,9 @@ public class Move : MonoBehaviour
 
     private int extraJump;
     private bool isGrounded = false;
-    public Transform groundCheck;
-    
-    public float groundRadius = 30f;
-    public LayerMask whatIsGround;
-    
+    private bool isAttacking = false;
+    [SerializeField] private Transform groundCheck;    
+    [SerializeField] private GameObject attackHitBox;    
 
     private void Awake()
     {
@@ -30,6 +28,7 @@ public class Move : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         extraJump = extraJumps;
+        attackHitBox.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -49,30 +48,39 @@ public class Move : MonoBehaviour
             ani.Play("SitAni");
         else if (rb.velocity.y < 0 && fallTimer < 0)
             ani.Play("FalAni");
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !isAttacking)
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
                 ani.Play("RunAni");
-            sprite.flipX = false;
+            transform.localScale = new Vector2(600, 600);
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A) && !isAttacking)
         {
             rb.velocity = new Vector2(-speed, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
                 ani.Play("RunAni");
-            sprite.flipX = true;
+            transform.localScale = new Vector2(-600, 600);
         }
         else
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
-                ani.Play("StayAni");
+                if (!isAttacking)
+                    ani.Play("StayAni");
         }
     }
 
     private void Update()
     {
+        if (Input.GetButtonDown("Fire1") && !isAttacking && isGrounded)
+        {
+            isAttacking = true;
+            int Choose = UnityEngine.Random.Range(1, 3);
+            ani.Play("Attack" + Choose);
+            StartCoroutine(DoAttack());
+        }
+        
         if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && extraJump > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -85,5 +93,15 @@ public class Move : MonoBehaviour
             ani.Play("SitAni");
             extraJump--;
         }            
+    }
+
+
+    IEnumerator DoAttack()
+    {
+        attackHitBox.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        attackHitBox.SetActive(false);
+
+        isAttacking = false;
     }
 }
