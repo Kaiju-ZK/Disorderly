@@ -46,12 +46,7 @@ public class RoomPool : MonoBehaviour
             mas[i % count] = mas[ran];
             mas[ran] = temp;
         }
-        for (int i = 0; i < count; i++)
-        {
-            print(mas[i]);
-        }
         rand = Random.Range(0, 2);
-        print(rand);
         for (int i = 0; i <= rand; i++)
         {
             if (i != rand)

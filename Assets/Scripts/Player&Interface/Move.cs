@@ -13,8 +13,8 @@ public class Move : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private Animator ani;
-    private int extraJump;
 
+    private int extraJump;
     private bool isGrounded = false;
     public Transform groundCheck;
     
@@ -31,42 +31,55 @@ public class Move : MonoBehaviour
         extraJump = extraJumps;
     }
 
-    private void Run()
-    {
-        float dir = Input.GetAxis("Horizontal");
-        GetComponent<Rigidbody2D>().velocity = new Vector2(dir * speed, rb.velocity.y);
-        sprite.flipX = dir < 0f;
-    }
-
     private void FixedUpdate()
     {
-        HP = StartHP;
-        if (Input.GetButton("Horizontal"))
-            Run();
-        else if (isGrounded)
-          rb.velocity = new Vector2(rb.velocity.x * 0.85f, rb.velocity.y);
-        ani.SetFloat("Speed", Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x * 0.01f));
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, whatIsGround);
-        ani.SetBool("Ground", isGrounded);
-        ani.SetFloat("FSpeed", GetComponent<Rigidbody2D>().velocity.y * 0.01f);
-        if (!isGrounded)
-            return;
+        if (rb.velocity.y > 0)
+            ani.Play("SitAni");
+        else if (rb.velocity.y < 0)
+            ani.Play("FalAni");
+        if (Input.GetKey(KeyCode.D))
+        {
+            rb.velocity = new Vector2(speed, rb.velocity.y);
+            if (isGrounded)
+                ani.Play("RunAni");
+            sprite.flipX = false;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            rb.velocity = new Vector2(-speed, rb.velocity.y);
+            if (isGrounded)
+                ani.Play("RunAni");
+            sprite.flipX = true;
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            if (isGrounded)
+                ani.Play("StayAni");
+        }
     }
 
     private void Update()
     {
+        if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")))
+        {
+            extraJump = extraJumps;
+            isGrounded = true;
+        }
+        else
+            isGrounded = false;
         if (isGrounded)
             extraJump = extraJumps;
-        if (Input.GetButtonDown("Jump") && extraJump > 0)
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && extraJump > 0)
         {
-            ani.SetBool("Ground", false);
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             extraJump--;
         }
-        else if (Input.GetButtonDown("Jump") && extraJump == 0 && isGrounded == true)
+        else if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && extraJump == 0 && isGrounded == true)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
+            ani.Play("SitAni");
+            extraJump--;
+        }            
     }
-
 }

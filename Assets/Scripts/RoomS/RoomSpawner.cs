@@ -24,7 +24,6 @@ public class RoomSpawner : MonoBehaviour
     [SerializeField] private Transform sideDoor;
     [SerializeField] private Transform exitDoor;
     private int rand;
-    private bool isSpawned = false;
     private bool isSide;
     //private readonly float waitTime = 3f;
 
