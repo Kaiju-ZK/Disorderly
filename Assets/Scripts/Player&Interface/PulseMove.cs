@@ -18,7 +18,7 @@ public class PulseMove : MonoBehaviour
     void FixedUpdate()
     {
         float ex;
-        HP = NewMovement.HP;
+        HP = Move.HP;
         if (HP <= 60)
             ex = 4;
         else if (HP <= 120)

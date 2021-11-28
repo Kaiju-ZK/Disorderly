@@ -687,9 +687,9 @@ GameObject:
   - component: {fileID: 1440053841}
   - component: {fileID: 1440053839}
   - component: {fileID: 1440053842}
-  - component: {fileID: 1440053845}
   - component: {fileID: 1440053840}
   - component: {fileID: 1440053844}
+  - component: {fileID: 1440053845}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -835,15 +835,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e14efa3a385ce04192d95eaba5dcfba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1000
-  jumpForce: 2200
-  StartHP: 70
-  extraJumps: 1
-  groundCheck: {fileID: 1929195318}
-  groundRadius: 30
+  speed: 6
+  jumpForce: 15
+  StartHP: 120
+  extraJumps: 2
+  groundCheck: {fileID: 0}
+  groundRadius: 0.2
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
 --- !u!1 &1470196718
 GameObject:
   m_ObjectHideFlags: 0

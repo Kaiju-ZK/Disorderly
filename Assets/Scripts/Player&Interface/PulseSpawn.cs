@@ -20,7 +20,7 @@ public class PulseSpawn : MonoBehaviour
     {
         p = pulse;
         time += Time.deltaTime;
-        HP = NewMovement.HP;
+        HP = Move.HP;
         period = 1 / (HP / 60);
         if (time >= period)
         {

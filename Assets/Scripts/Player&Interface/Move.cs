@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewMovement : MonoBehaviour
+public class Move : MonoBehaviour
 {
-    [SerializeField] private float speed = 6f;
-    [SerializeField] private float jumpForce = 15f;
+    [SerializeField] private float speed = 1000f;
+    [SerializeField] private float jumpForce = 2200f;
     public int StartHP;
-    public static int HP = 100;
-    [SerializeField] private int extraJumps = 2;
+    public static int HP = 70;
+    [SerializeField] private int extraJumps = 1;
 
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
@@ -18,7 +18,7 @@ public class NewMovement : MonoBehaviour
     private bool isGrounded = false;
     public Transform groundCheck;
     
-    public float groundRadius = 0.2f;
+    public float groundRadius = 30f;
     public LayerMask whatIsGround;
     
 

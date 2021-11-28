@@ -839,14 +839,10 @@ MonoBehaviour:
   jumpForce: 2200
   StartHP: 70
   extraJumps: 1
-  rb: {fileID: 0}
-  sprite: {fileID: 0}
-  ani: {fileID: 0}
-  extraJump: 0
-  isGrounded: 0
   groundCheck: {fileID: 1929195318}
   groundRadius: 30
   whatIsGround:
+    serializedVersion: 2
     m_Bits: 8
 --- !u!1 &1470196718
 GameObject:
