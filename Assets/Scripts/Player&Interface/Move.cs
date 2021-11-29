@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-    [SerializeField] private float speed = 1000f;
-    [SerializeField] private float jumpForce = 2200f;
-    public int StartHP;
-    public static int HP = 70;
-    [SerializeField] private int extraJumps = 1;
-    private float fallTimer = 0.2f;
-
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private Animator ani;
 
+    [SerializeField] private float speed = 1000f;
+    [SerializeField] private float jumpForce = 2200f;
+    public static int HP = 70;
+    public int StartHP;
+
+    private float fallTimer = 0.2f;
     private int extraJump;
     private bool isGrounded = false;
-    private bool isAttacking = false;
+    [SerializeField] private int extraJumps = 1;
     [SerializeField] private Transform groundCheck;    
-    [SerializeField] private GameObject attackHitBox;    
+
+    private bool isAttacking = false;
+    [SerializeField] private Transform attackHitBox;    
+    [SerializeField] private LayerMask enemy;
+    public float attackRadius = 20f;
+    public int Damage = 30;
 
     private void Awake()
     {
@@ -28,7 +32,6 @@ public class Move : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         extraJump = extraJumps;
-        attackHitBox.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -44,7 +47,7 @@ public class Move : MonoBehaviour
             isGrounded = false;
             fallTimer -= Time.deltaTime;
         }
-        if (rb.velocity.y > 0)
+        if (rb.velocity.y > 0 && fallTimer < 0)
             ani.Play("SitAni");
         else if (rb.velocity.y < 0 && fallTimer < 0)
             ani.Play("FalAni");
@@ -98,9 +101,22 @@ public class Move : MonoBehaviour
 
     IEnumerator DoAttack()
     {
-        attackHitBox.SetActive(true);
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(attackHitBox.position, attackRadius, enemy);
+        for (int i = 0; i < enemies.Length; i++) 
+        {
+            enemies[i].GetComponent<EnemyMove>().HP -= Damage;
+            enemies[i].GetComponent<EnemyMove>().hitTimer = 0.3f;
+            if (transform.localScale.x > 0)
+            {
+                enemies[i].GetComponent<Rigidbody2D>().velocity = new Vector2(700f, 1000f);
+            }
+            else
+            {
+                enemies[i].GetComponent<Rigidbody2D>().velocity = new Vector2(-700f, 1000f);
+            }
+        }
         yield return new WaitForSeconds(0.5f);
-        attackHitBox.SetActive(false);
+
 
         isAttacking = false;
     }
