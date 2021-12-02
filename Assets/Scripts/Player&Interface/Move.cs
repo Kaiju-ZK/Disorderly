@@ -5,15 +5,14 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private SpriteRenderer sprite;
     private Animator ani;
 
     [SerializeField] private float speed = 1000f;
     [SerializeField] private float jumpForce = 2200f;
-    public static int HP = 70;
-    public int StartHP;
+    public int HP = 100;
 
     private float fallTimer = 0.2f;
+    public float hitTimer;
     private int extraJump;
     private bool isGrounded = false;
     [SerializeField] private int extraJumps = 1;
@@ -27,15 +26,15 @@ public class Move : MonoBehaviour
 
     private void Awake()
     {
-        HP = StartHP;
         rb = GetComponent<Rigidbody2D>();
-        sprite = GetComponent<SpriteRenderer>();
         ani = GetComponent<Animator>();
         extraJump = extraJumps;
     }
 
     private void FixedUpdate()
     {
+        if (hitTimer > 0)
+            hitTimer -= Time.deltaTime;
         if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")))
         {
             extraJump = extraJumps;
@@ -47,18 +46,18 @@ public class Move : MonoBehaviour
             isGrounded = false;
             fallTimer -= Time.deltaTime;
         }
-        if (rb.velocity.y > 0 && fallTimer < 0)
+        if (rb.velocity.y > 0 && fallTimer < 0 && hitTimer <= 0)
             ani.Play("SitAni");
-        else if (rb.velocity.y < 0 && fallTimer < 0)
+        else if (rb.velocity.y < 0 && fallTimer < 0 && hitTimer <= 0)
             ani.Play("FalAni");
-        if (Input.GetKey(KeyCode.D) && !isAttacking)
+        if (Input.GetKey(KeyCode.D) && !isAttacking && hitTimer <= 0)
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
                 ani.Play("RunAni");
             transform.localScale = new Vector2(600, 600);
         }
-        else if (Input.GetKey(KeyCode.A) && !isAttacking)
+        else if (Input.GetKey(KeyCode.A) && !isAttacking && hitTimer <= 0)
         {
             rb.velocity = new Vector2(-speed, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
@@ -67,7 +66,8 @@ public class Move : MonoBehaviour
         }
         else
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            if (hitTimer <= 0)
+                rb.velocity = new Vector2(0, rb.velocity.y);
             if (isGrounded && rb.velocity.y == 0)
                 if (!isAttacking)
                     ani.Play("StayAni");
@@ -95,17 +95,22 @@ public class Move : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             ani.Play("SitAni");
             extraJump--;
-        }            
+        }
+        if (HP < 35)
+        {
+            HP = 0;
+            Time.timeScale = 0;
+        }
     }
 
 
     IEnumerator DoAttack()
     {
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(attackHitBox.position, attackRadius, enemy);
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(attackHitBox.position, attackRadius, LayerMask.GetMask("Enemy"));
         for (int i = 0; i < enemies.Length; i++) 
         {
             enemies[i].GetComponent<EnemyMove>().HP -= Damage;
-            enemies[i].GetComponent<EnemyMove>().hitTimer = 0.3f;
+            enemies[i].GetComponent<EnemyMove>().hitTimer = 0.5f;
             if (transform.localScale.x > 0)
             {
                 enemies[i].GetComponent<Rigidbody2D>().velocity = new Vector2(700f, 1000f);

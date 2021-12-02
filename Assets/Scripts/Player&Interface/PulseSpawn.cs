@@ -20,7 +20,7 @@ public class PulseSpawn : MonoBehaviour
     {
         p = pulse;
         time += Time.deltaTime;
-        HP = Move.HP;
+        HP = GameObject.FindGameObjectWithTag("Player").GetComponent<Move>().HP;
         period = 1 / (HP / 60);
         if (time >= period)
         {
