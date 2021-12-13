@@ -13,11 +13,13 @@ public class EnemyMove : MonoBehaviour
     public int Damage = 30;
 
     private Transform PlayerPosition;
+    Vector3 findPos;
     public float hitTimer;
     public float attackCD;
+    private bool alive = true;
     [SerializeField] private Transform attackHitBox;
     [SerializeField] private LayerMask playerMask;
-    public float attackRadius = 100f;
+    public float attackRadius = 250f;
     private Vector3 Scale;
 
     
@@ -30,7 +32,7 @@ public class EnemyMove : MonoBehaviour
 
     void Update()
     {
-        if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0)
+        if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50)
         {
             ani.Play("Attack");
             attackCD = 2.5f;
@@ -44,7 +46,8 @@ public class EnemyMove : MonoBehaviour
         {
             if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) >= 200)
             {
-                transform.position = Vector3.MoveTowards(transform.position, PlayerPosition.position, speed * Time.deltaTime);
+                findPos = new Vector3(PlayerPosition.position.x, transform.position.y, PlayerPosition.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, findPos, speed * Time.deltaTime);
                 ani.Play("Walk");
             }
                 if (PlayerPosition.position.x - transform.position.x > 0)
@@ -63,6 +66,11 @@ public class EnemyMove : MonoBehaviour
     {
         ani.Play("Death");
         Destroy(gameObject, 1f);
+        if (alive == true)
+        {
+            GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable--;
+            alive = false;
+        }
     }
 
     void DoAttack()
@@ -82,5 +90,10 @@ public class EnemyMove : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnBecameVisible()
+    {
+        GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable++;
     }
 }

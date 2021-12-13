@@ -16,6 +16,9 @@ public class RoomPool : MonoBehaviour
     public GameObject[] CenterEnter;
     public GameObject[] DownEnter;
     public GameObject[] Weapon;
+    public GameObject[] Doors;
+    public int doorCount = 0;
+    private bool once = false;
     private bool wea = false;
     public GameObject[] Medicine;
     private bool med = false;
@@ -29,8 +32,11 @@ public class RoomPool : MonoBehaviour
     public List<int> type;
     public List<int> side;
 
+    public int doorEnable = 0;
+
     private void Start()
     {
+        Doors = new GameObject[50];
         int rand;
         count = Random.Range(3, (Random.Range(4, 9) + 1));
         int[] mas = new int[count];
@@ -112,5 +118,16 @@ public class RoomPool : MonoBehaviour
             type.Add(3);
             return;
         }
+    }
+    private void Update()
+    {
+        if (doorEnable == 0 && once)
+        {
+            for (int i = 0; i < doorCount; i++)
+                Doors[i].SetActive(true);
+            once = false;
+        }
+        else if (doorEnable > 0)
+            once = true;
     }
 }

@@ -95,7 +95,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.13.5",
+      "version": "1.15.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -137,7 +137,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.4",
+      "version": "1.2.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {},

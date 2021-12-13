@@ -9,10 +9,12 @@ public class RoomSide : MonoBehaviour
     private GameObject Player;
     private bool trigger = false;
     private Camera cam;
+    private bool once = false;
 
     void Start()
     {
         cam = Camera.main.GetComponent<Camera>();
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,6 +37,14 @@ public class RoomSide : MonoBehaviour
 
     private void Update()
     {
+        if (!once)
+        {
+            GameObject.Find("RoomPool").GetComponent<RoomPool>().Doors[GameObject.Find("RoomPool").GetComponent<RoomPool>().doorCount] = gameObject;
+            GameObject.Find("RoomPool").GetComponent<RoomPool>().doorCount++;
+            once = true;
+        }
+        if (GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable > 0)
+            gameObject.SetActive(false);
         if (trigger && Input.GetKeyDown(KeyCode.E))
         {
             Player.transform.position += playerChangePos;
