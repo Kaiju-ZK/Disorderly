@@ -21,8 +21,9 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
     public float attackRadius = 250f;
     private Vector3 Scale;
+    private bool visible = false;
 
-    
+
     void Start()
     {
         PlayerPosition = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
@@ -32,33 +33,36 @@ public class EnemyMove : MonoBehaviour
 
     void Update()
     {
-        if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50)
+        if (visible)
         {
-            ani.Play("Attack");
-            attackCD = 2.5f;
-            Invoke("DoAttack", 0.5f);
-        }
-        if (hitTimer > 0)
-            hitTimer -= Time.deltaTime;
-        if (attackCD > 0)
-            attackCD -= Time.deltaTime;
-        if (hitTimer <= 0 && HP > 0 && attackCD < 1.5)
-        {
-            if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) >= 200)
+            if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50)
             {
-                findPos = new Vector3(PlayerPosition.position.x, transform.position.y, PlayerPosition.position.z);
-                transform.position = Vector3.MoveTowards(transform.position, findPos, speed * Time.deltaTime);
-                ani.Play("Walk");
+                ani.Play("Attack");
+                attackCD = 2.5f;
+                Invoke("DoAttack", 0.5f);
             }
+            if (hitTimer > 0)
+                hitTimer -= Time.deltaTime;
+            if (attackCD > 0)
+                attackCD -= Time.deltaTime;
+            if (hitTimer <= 0 && HP > 0 && attackCD < 1.5)
+            {
+                if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) >= 200)
+                {
+                    findPos = new Vector3(PlayerPosition.position.x, transform.position.y, PlayerPosition.position.z);
+                    transform.position = Vector3.MoveTowards(transform.position, findPos, speed * Time.deltaTime);
+                    ani.Play("Walk");
+                }
                 if (PlayerPosition.position.x - transform.position.x > 0)
                     transform.localScale = new Vector3(-Scale.x, Scale.y, Scale.z);
                 else
                     transform.localScale = new Vector3(Scale.x, Scale.y, Scale.z);
+            }
+            else if (hitTimer > 0 && HP > 0 && attackCD < 1.5)
+                ani.Play("Hurt");
+            if (HP <= 0)
+                Invoke("Death", 0.3f);
         }
-        else if (hitTimer > 0 && HP > 0 && attackCD < 1.5)
-            ani.Play("Hurt");
-        if (HP <= 0)
-            Invoke("Death", 0.3f);
     }
 
 
@@ -94,6 +98,7 @@ public class EnemyMove : MonoBehaviour
 
     private void OnBecameVisible()
     {
+        visible = true;
         GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable++;
     }
 }
