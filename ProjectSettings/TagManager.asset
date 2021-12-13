@@ -8,6 +8,7 @@ TagManager:
   - Room
   - PlayerAttack
   - EnemyAttack
+  - Door
   layers:
   - Default
   - TransparentFX
