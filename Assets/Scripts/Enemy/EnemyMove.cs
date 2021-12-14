@@ -26,6 +26,7 @@ public class EnemyMove : MonoBehaviour
 
     void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
         PlayerPosition = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         ani = GetComponent<Animator>();
         Scale = transform.localScale;
@@ -35,7 +36,7 @@ public class EnemyMove : MonoBehaviour
     {
         if (visible)
         {
-            if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50)
+            if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50 && HP > 0)
             {
                 ani.Play("Attack");
                 attackCD = 2.5f;
@@ -61,13 +62,16 @@ public class EnemyMove : MonoBehaviour
             else if (hitTimer > 0 && HP > 0 && attackCD < 1.5)
                 ani.Play("Hurt");
             if (HP <= 0)
-                Invoke("Death", 0.3f);
+                Invoke("Death", 0.5f);
         }
     }
 
 
     void Death()
     {
+        rb.velocity = new Vector2(0, 0);
+        rb.gravityScale = 0;
+        gameObject.GetComponent<BoxCollider2D>().isTrigger = true;
         ani.Play("Death");
         Destroy(gameObject, 1f);
         if (alive == true)

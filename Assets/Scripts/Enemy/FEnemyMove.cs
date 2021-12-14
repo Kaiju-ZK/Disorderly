@@ -13,11 +13,14 @@ public class FEnemyMove : MonoBehaviour
     public int Damage = 30;
 
     private Transform PlayerPosition;
+    private Vector3 moveTo;
     Vector3 findPos;
     public float hitTimer;
     public float attackCD;
     private bool alive = true;
     [SerializeField] private Transform attackHitBox;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Transform ceilCheck;
     [SerializeField] private LayerMask playerMask;
     public float attackRadius = 250f;
     private Vector3 Scale;
@@ -35,6 +38,11 @@ public class FEnemyMove : MonoBehaviour
     {
         if (visible)
         {
+            moveTo = PlayerPosition.position;
+            if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")) || Physics2D.Linecast(transform.position, ceilCheck.position, 1 << LayerMask.NameToLayer("Ground")))
+            {
+                moveTo.y = 0;
+            }
             if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) < 400 && attackCD <= 0 && Mathf.Abs(transform.position.y - PlayerPosition.position.y) <= 50)
             {
                 ani.Play("FAttack");
@@ -49,7 +57,7 @@ public class FEnemyMove : MonoBehaviour
             {
                 if (Mathf.Abs(transform.position.x - PlayerPosition.position.x) >= 200)
                 {
-                    findPos = new Vector3(PlayerPosition.position.x, transform.position.y, PlayerPosition.position.z);
+                    findPos = new Vector3(moveTo.x, moveTo.y, moveTo.z);
                     transform.position = Vector3.MoveTowards(transform.position, findPos, speed * Time.deltaTime);
                     ani.Play("FMove");
                 }
