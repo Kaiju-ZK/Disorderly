@@ -85,24 +85,24 @@ public class FEnemyMove : MonoBehaviour
         }
     }
 
-    //void DoAttack()
-    //{
-    //    Collider2D Player = Physics2D.OverlapCircle(attackHitBox.position, attackRadius, playerMask);
-    //    if (Player != null)
-    //    {
-    //        Player.gameObject.GetComponent<Move>().HP -= Damage;
-    //        Player.gameObject.GetComponent<Move>().hitTimer = 0.3f;
-    //        if (transform.localScale.x > 0)
-    //        {
-    //            Player.GetComponent<Rigidbody2D>().velocity = new Vector2(-800f, 1000f);
-    //        }
-    //        else
-    //        {
-    //            Player.GetComponent<Rigidbody2D>().velocity = new Vector2(800f, 1000f);
-    //        }
-    //    }
+    void DoAttack()
+    {
+        Collider2D Player = Physics2D.OverlapCircle(attackHitBox.position, attackRadius, playerMask);
+        if (Player != null)
+        {
+            Player.gameObject.GetComponent<Move>().HP -= Damage;
+            Player.gameObject.GetComponent<Move>().hitTimer = 0.3f;
+            if (transform.localScale.x > 0)
+            {
+                Player.GetComponent<Rigidbody2D>().velocity = new Vector2(-800f, 1000f);
+            }
+            else
+            {
+                Player.GetComponent<Rigidbody2D>().velocity = new Vector2(800f, 1000f);
+            }
+        }
 
-    //}
+    }
 
     private void OnBecameVisible()
     {
