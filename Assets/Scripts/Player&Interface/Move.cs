@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Move : MonoBehaviour
 {
@@ -72,6 +73,7 @@ public class Move : MonoBehaviour
                 if (!isAttacking)
                     ani.Play("StayAni");
         }
+        
     }
 
     private void Update()
@@ -98,8 +100,16 @@ public class Move : MonoBehaviour
         }
         if (HP < 35)
         {
+            if (Time.timeScale == 1)
+                gameObject.GetComponent<AudioSource>().Play();
             HP = 0;
             Time.timeScale = 0;
+            ani.Play("SitAni");
+        }
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene(0);
         }
     }
 

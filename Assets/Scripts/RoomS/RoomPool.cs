@@ -74,6 +74,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 1 && wea == false)
         {
             type.Add(1);
+            wea = true;
             return;
         }
         else if (wea == true)
@@ -81,6 +82,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 2 && med == false)
         {
             type.Add(2);
+            med = true;
             return;
         }
         else if (med == true)
@@ -88,6 +90,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 3 && sin == false)
         {
             type.Add(3);
+            sin = true;
             return;
         }
         else if (sin == true)
@@ -95,6 +98,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 4 && ele == false)
         {
             type.Add(4);
+            ele = true;
             return;
         }
         else if (ele == true)
@@ -102,6 +106,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 1 && wea == false)
         {
             type.Add(1);
+            wea = true;
             return;
         }
         else if (wea == true)
@@ -109,6 +114,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 2 && med == false)
         {
             type.Add(2);
+            med = true;
             return;
         }
         else if (med == true)
@@ -116,6 +122,7 @@ public class RoomPool : MonoBehaviour
         if (randomRoom == 3 && sin == false)
         {
             type.Add(3);
+            sin = true;
             return;
         }
     }

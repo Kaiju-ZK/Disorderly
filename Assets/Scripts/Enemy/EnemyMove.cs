@@ -79,6 +79,8 @@ public class EnemyMove : MonoBehaviour
             GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable--;
             alive = false;
         }
+        if (gameObject.tag == "Boss")
+            gameObject.GetComponent<Boss>().DeadOrAlive = true;
     }
 
     void DoAttack()

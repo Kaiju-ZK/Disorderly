@@ -23,6 +23,13 @@ public class RoomChanger : MonoBehaviour
                 GameObject.Find("RoomPool").GetComponent<RoomPool>().doorCount++;
                 once = true;
             }
+        if (GameObject.FindGameObjectWithTag("Room").GetComponent<RoomPool>().count == GameObject.FindGameObjectWithTag("Room").GetComponent<RoomPool>().counter - 1)
+            if (!once && playerChangePos.x < 0)
+            {
+                GameObject.Find("RoomPool").GetComponent<RoomPool>().Doors[GameObject.Find("RoomPool").GetComponent<RoomPool>().doorCount] = gameObject;
+                GameObject.Find("RoomPool").GetComponent<RoomPool>().doorCount++;
+                once = true;
+            }
         if (GameObject.Find("RoomPool").GetComponent<RoomPool>().doorEnable > 0)
             gameObject.SetActive(false);
     }
